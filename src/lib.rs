@@ -1,4 +1,9 @@
-// TODO licence
+// Copyright 2019 numid Developers
+//
+// Licensed under the Apache License, Version 2.0, <LICENSE-APACHE or
+// http://apache.org/licenses/LICENSE-2.0> or the MIT license <LICENSE-MIT or
+// http://opensource.org/licenses/MIT>, at your option. This file may not be
+// copied, modified, or distributed except according to those terms.
 
 /*! 
 This crate provide the `numid!` macro for creating numerical id.
@@ -14,12 +19,22 @@ If not indicated, TYPE=`u64` and CONSTANT=`0`.
 Attributes can be attached to the generated `struct` by placing them
 before the `struct` keyword (or `pub` if public).
 
-# Exemples TODO (compléter et enlever le ignor)
+# Exemples
 
-```ignore
+```rust
 # #[macro_use]
 # extern crate numid;
+
 numid!(struct MyId -> 10);
+
+fn main() {
+    let id1 = MyId::new();
+    let id2 = MyId::new();
+
+    assert!(id2 > id1);
+    assert_eq!(id1.value(), 11);
+    assert_eq!(id2.value(), 12);
+}
 ```
 
 # Trait implementations
@@ -32,7 +47,6 @@ The `Display` and `Default` traits are implemented for the `struct`. When
 calling `default()`, the struct is initialied with a new value instead of `0`.
 */
  
-/// TODO
 #[macro_export]
 macro_rules! numid {
     ($(#[$attr:meta])* $vis:vis struct $name:ident) => {
@@ -45,16 +59,8 @@ macro_rules! numid {
         numid!{$(#[$attr])* $vis struct $name($ty) -> 0}
     };
     ($(#[$attr:meta])* $vis:vis struct $name:ident($ty:ty) -> $init_val:expr) => {
-        /// TODO
-        ///
-        /// # Examples
-        ///
-        /// ```
-        /// let arg = 5;
-        /// let answer = my_crate::add_one(arg);
-        ///
-        /// assert_eq!(6, answer);
-        /// ```
+    
+        /// A numerical id generated with the `numid!` macro.
         $(#[$attr])*
         #[derive(Eq, PartialEq, Ord, PartialOrd, Clone, Copy, Hash, Debug)]
         $vis struct $name($ty);
@@ -82,7 +88,7 @@ macro_rules! numid {
                 })
             }
             
-            /// Get the value of an id.
+            /// Get the value of the id.
             #[allow(dead_code)]
             #[inline]
             pub const fn value(self) -> $ty {
