@@ -1,5 +1,6 @@
- 
-A macro to generate structures which behave like numerical id.
+# numid
+
+This crate provide the `numid!` macro for generating structures which behave like numerical id.
  
 ## Usage
 
@@ -16,3 +17,5 @@ and this to your crate root:
 #[macro_use]
 extern crate numid;
 ```
+
+
