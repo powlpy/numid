@@ -5,7 +5,7 @@ authors = ["Nicolas Poelen"]
 edition = "2018"
 
 description = "A macro for generating structures which behave like numerical id."
-licence = "MIT"
+license = "MIT"
 keywords = ["macro", "id", "struct"]
 readme = "README.md"
 repository = "https://github.com/powlpy/numid"
