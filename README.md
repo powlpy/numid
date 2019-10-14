@@ -2,13 +2,13 @@
 
 This crate provide the `numid!` macro for generating structures which behave like numerical id.
 
-## Exemple
+## Example
 
 ```rust
 # #[macro_use]
 # extern crate numid;
 
-numid!(struct MyId -> 10);
+numid!(pub struct MyId -> 10);
 
 fn main() {
     let id1 = MyId::new();

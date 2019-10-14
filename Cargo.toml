@@ -7,9 +7,13 @@ edition = "2018"
 description = "A macro for generating structures which behave like numerical id."
 license = "MIT"
 keywords = ["macro", "id", "struct"]
+#categories = ["no-std"] # unimplemented
 readme = "README.md"
 repository = "https://github.com/powlpy/numid"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+default = []
+example = []
 
-[dependencies]
+[package.metadata.docs.rs]
+features = [ "example" ]

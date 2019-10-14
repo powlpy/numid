@@ -2,9 +2,9 @@
 //! **IT MUST NOT BE USED OUTSIDE THIS CRATE**.
 
 /// A numerical id.
-/// Generated with the macro call `numid!(struct NumId);`.
+/// Generated with the macro call `numid!(pub struct NumId);`.
 #[derive(Eq, PartialEq, Ord, PartialOrd, Clone, Copy, Hash, Debug)]
-struct NumId(u64);
+pub struct NumId(u64);
         
 impl NumId {
     /// Constant defined when calling the `numid!` macro (0 if not defined).
