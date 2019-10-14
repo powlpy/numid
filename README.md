@@ -36,4 +36,7 @@ and this to your crate root:
 extern crate numid;
 ```
 
+## Features
 
+This crate can be used without the standard library (`#![no_std]`) by disabling the default `std` feature.
+The only functionnality disabled if `std` is disabled is the implementation of the `Display` trait.

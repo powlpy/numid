@@ -7,14 +7,15 @@ edition = "2018"
 description = "A macro for generating structures which behave like numerical id."
 license = "MIT"
 keywords = ["macro", "id", "struct", "static"]
-#categories = ["no-std"] # unimplemented
+categories = ["no-std"]
 readme = "README.md"
 repository = "https://github.com/powlpy/numid"
 documentation = "https://docs.rs/numid"
 
 [features]
-default = []
+default = ["std"]
+std = []
 example = []
 
 [package.metadata.docs.rs]
-features = [ "example" ]
+features = [ "example", "std" ]
