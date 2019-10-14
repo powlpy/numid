@@ -18,7 +18,7 @@ If not indicated, TYPE=`u64` and CONSTANT=`0`.
 Attributes can be attached to the generated `struct` by placing them
 before the `struct` keyword (or `pub` if public).
 
-# Exemples
+# Examples
 
 ```rust
 # #[macro_use]
