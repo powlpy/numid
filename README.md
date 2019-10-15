@@ -26,7 +26,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-numid = "0.1.2"
+numid = "0.2.0"
 ```
 
 and this to your crate root:
@@ -35,8 +35,3 @@ and this to your crate root:
 #[macro_use]
 extern crate numid;
 ```
-
-## Features
-
-This crate can be used without the standard library (`#![no_std]`) by disabling the default `std` feature.
-The only functionnality disabled if `std` is disabled is the implementation of the `Display` trait.

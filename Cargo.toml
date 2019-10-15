@@ -1,6 +1,6 @@
 [package]
 name = "numid"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Nicolas Poelen"]
 edition = "2018"
 
@@ -13,9 +13,8 @@ repository = "https://github.com/powlpy/numid"
 documentation = "https://docs.rs/numid"
 
 [features]
-default = ["std"]
-std = []
+default = []
 example = []
 
 [package.metadata.docs.rs]
-features = [ "example", "std" ]
+features = [ "example" ]

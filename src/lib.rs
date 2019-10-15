@@ -44,7 +44,7 @@ The `Copy`, `Clone`, `PartialEq`, `Eq`, `PartialOrd`, `Ord`, `Hash` and `Debug`
 traits automatically derived for the `struct` using the `derive` attribute.
 Additional traits can be derived by providing an explicit `derive` attribute.
 
-The `Display`(if `std` feature not disabled) and `Default` traits are implemented for the `struct`. When
+The `Display` and `Default` traits are implemented for the `struct`. When
 calling `default()`, the struct is initialied with a new value instead of `0`.
 
 # Methods
@@ -61,8 +61,11 @@ See [`example::NumId`](./example/struct.NumId.html) for more documentation of  m
 */
 
 #![no_std]
-#[cfg(feature = "std")]
-extern crate std;
+
+// Re-export libcore using an alias so that the macros can work without
+// requiring `extern crate core` downstream.
+#[doc(hidden)]
+pub extern crate core as _core;
  
 #[macro_export]
 macro_rules! numid {
@@ -122,7 +125,7 @@ macro_rules! numid {
                 }
             }
             
-            /// return INITIAL_VALUE.
+            /// Return INITIAL_VALUE.
             #[allow(dead_code)]
             #[inline]
             pub const fn initial_value() -> $ty {
@@ -165,9 +168,8 @@ macro_rules! numid {
             }
         }
         
-        #[cfg(feature = "std")]
-        impl std::fmt::Display for $name {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        impl $crate::_core::fmt::Display for $name {
+            fn fmt(&self, f: &mut $crate::_core::fmt::Formatter<'_>) -> $crate::_core::fmt::Result {
                 write!(f, "{}", self.0)
             }
         }
