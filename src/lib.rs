@@ -45,7 +45,7 @@ traits automatically derived for the `struct` using the `derive` attribute.
 Additional traits can be derived by providing an explicit `derive` attribute.
 
 The `Display` and `Default` traits are implemented for the `struct`. When
-calling `default()`, the struct is initialied with a new value instead of `0`.
+calling `default()`, the struct is initialized with a new value instead of `0`.
 
 # Methods
 The following methods are defined for the generated `struct` (only `value` need a instance) :
