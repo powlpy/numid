@@ -5,8 +5,8 @@ This crate provide the `numid!` macro for generating structures which behave lik
 ## Example
 
 ```rust
-# #[macro_use]
-# extern crate numid;
+#[macro_use]
+extern crate numid;
 
 numid!(pub struct MyId -> 10);
 

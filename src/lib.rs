@@ -162,12 +162,15 @@ macro_rules! numid {
         }
                 
         impl Default for $name {
+            /// Increment the current value and create a new id with value = `current_value()`.
+            /// This is equivalent to `new()`.
             #[inline]
             fn default() -> $name {
                 $name::new()
             }
         }
         
+        /// This method is directly applied to `value()`. 
         impl $crate::_core::fmt::Display for $name {
             fn fmt(&self, f: &mut $crate::_core::fmt::Formatter<'_>) -> $crate::_core::fmt::Result {
                 write!(f, "{}", self.0)
