@@ -21,8 +21,7 @@ before the `struct` keyword (or `pub` if public).
 # Examples
 
 ```rust
-# #[macro_use]
-# extern crate numid;
+# use numid::numid;
 
 numid!(pub struct MyId -> 10);
 
