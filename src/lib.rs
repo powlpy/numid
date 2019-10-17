@@ -66,7 +66,16 @@ See [`example::NumId`](./example/struct.NumId.html) for more documentation of  m
 // requiring `extern crate core` downstream.
 #[doc(hidden)]
 pub extern crate core as _core;
- 
+
+
+/*
+Features used in this crate by rust version :
+ - 1.31 : const fn
+ - 1.30 : $vis
+ - 1.20 : associated const
+
+Current minimum rust version of the crate : 1.31
+*/
 #[macro_export]
 macro_rules! numid {
     ($(#[$attr:meta])* $vis:vis struct $name:ident) => {
@@ -265,6 +274,7 @@ mod tests {
         let _ = IdWithInitVal::create_lower(150);
     }
     
+    // rustc v1.26+
     #[test]
     fn tests_u128() {
         numid!(struct Id128(u128) -> 1u128 << 100);
