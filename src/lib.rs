@@ -273,5 +273,8 @@ mod tests {
         assert_eq!(id.value(), (1u128 << 100) + 1);
         
         assert!(Id128::replace_current_value(1u128 << 110));
+        assert_eq!(Id128::replace_current_value(1u128 << 108), false);
+        
+        let _ = Id128::create_lower(1u128 << 80);
     }
 }

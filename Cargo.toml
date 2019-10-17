@@ -16,6 +16,9 @@ exclude = [
     ".travis.yml"
 ]
 
+[badges]
+travis-ci = { repository = "powlpy/numid" }
+
 [features]
 default = []
 example = []

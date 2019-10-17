@@ -2,6 +2,12 @@
 
 This crate provide the `numid!` macro for generating structures which behave like numerical id.
 
+[![Build Status](https://travis-ci.com/powlpy/numid.svg?branch=master)](https://travis-ci.com/powlpy/numid)
+[![Crate](https://img.shields.io/crates/v/numid.svg)](https://crates.io/crates/numid)
+[![Documentation](https://docs.rs/numid/badge.svg)](https://docs.rs/numid)
+![Minimum rustc version](https://img.shields.io/badge/rustc-1.31+-yellow.svg)
+[![License](https://img.shields.io/crates/l/numid.svg)](https://github.com/powlpy/numid/blob/master/LICENSE)
+
 ## Example
 
 ```rust
