@@ -31,7 +31,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-numid = "0.2.0"
+numid = "0.2.1"
 ```
 
 and this to your crate root:
