@@ -182,8 +182,14 @@ macro_rules! numid {
 #[cfg(feature = "example")]
 pub mod example;
 
+
+// Always test the example.
+#[cfg(all(test, not(feature = "example")))]
+mod example;
+
 #[cfg(test)]
 mod tests {
+
     numid!(struct Id);
     numid!(struct IdWithInitVal -> 100);
     numid!(struct UnusedId(u32) -> 10);
@@ -257,5 +263,15 @@ mod tests {
     #[should_panic]
     fn tests_create_lower_fail() {
         let _ = IdWithInitVal::create_lower(150);
+    }
+    
+    #[test]
+    fn tests_u128() {
+        numid!(struct Id128(u128) -> 1u128 << 100);
+        
+        let id = Id128::new();
+        assert_eq!(id.value(), (1u128 << 100) + 1);
+        
+        assert!(Id128::replace_current_value(1u128 << 110));
     }
 }
