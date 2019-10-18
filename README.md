@@ -41,7 +41,7 @@ use numid::numid;
 
 numid!(struct Id); // basic id
 numid!(pub struct _Id2); // public
-numid!(pub(crate) struct _Id3); // specifif public
+numid!(pub(crate) struct _Id3); // specific public
 numid!(#[doc(hidden)] struct _Id4); // with attribut
 numid!(struct _Id5 -> 100); // init const specified
 numid!(struct _Id6(u128)); // type specified

@@ -61,11 +61,6 @@ See [`example::NumId`](./example/struct.NumId.html) for more documentation of  m
 
 #![no_std]
 
-// Re-export libcore using an alias so that the macros can work without
-// requiring `extern crate core` downstream.
-#[doc(hidden)]
-pub extern crate core as _core;
-
 /*
 Features used in this crate by rust version :
  - 1.31 : const fn
@@ -74,6 +69,23 @@ Features used in this crate by rust version :
 
 Current minimum rust version of the crate : 1.31
 */
+
+// Re-export libcore using an alias so that the macros can work without
+// requiring `extern crate core` downstream.
+#[doc(hidden)]
+pub extern crate core as _core;
+
+/// # Examples
+/// ```
+/// use numid::numid;
+/// numid!(struct Id); // basic id
+/// numid!(pub struct Id2); // public
+/// numid!(pub(crate) struct Id3); // specific public
+/// numid!(#[doc(hidden)] struct Id4); // with attribut
+/// numid!(struct Id5 -> 100); // init const specified
+/// numid!(struct Id6(u128)); // type specified
+/// numid!(#[doc(hidden)] pub struct Id7(u32) -> 10); // all the thing you can want
+/// ```
 #[macro_export]
 macro_rules! numid {
     ($(#[$attr:meta])* $vis:vis struct $name:ident) => {
