@@ -4,7 +4,7 @@
 // http://opensource.org/licenses/MIT>. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-/*! 
+/*!
 This crate provide the `numid!` macro for creating numerical id.
 
 # Syntax
@@ -66,7 +66,6 @@ See [`example::NumId`](./example/struct.NumId.html) for more documentation of  m
 #[doc(hidden)]
 pub extern crate core as _core;
 
-
 /*
 Features used in this crate by rust version :
  - 1.31 : const fn
@@ -87,26 +86,26 @@ macro_rules! numid {
         numid!{$(#[$attr])* $vis struct $name($ty) -> 0}
     };
     ($(#[$attr:meta])* $vis:vis struct $name:ident($ty:ty) -> $init_val:expr) => {
-    
+
         /// A numerical id generated with the `numid!` macro.
         $(#[$attr])*
         #[warn(non_camel_case_types)]
         #[warn(dead_code)] // useless : allow(dead_code) for the fns remove the warning
         #[derive(Eq, PartialEq, Ord, PartialOrd, Clone, Copy, Hash, Debug)]
         $vis struct $name($ty);
-                
+
         impl $name {
             /// Constant defined when calling the `numid!` macro (0 if not defined).
             /// The firt id created (with `new()` or `default()`) will have value = `INITIAL_VALUE + 1`.
             pub const INITIAL_VALUE: $ty = $init_val;
-                    
+
             #[doc(hidden)]
             #[inline]
             unsafe fn __get_static_mut() -> &'static mut $ty {
                 static mut CURRENT_VALUE: $ty = $name::INITIAL_VALUE;
                 &mut CURRENT_VALUE
             }
-            
+
             /// Increment the current value and create a new id with value = `current_value()`.
             #[allow(dead_code)]
             #[inline]
@@ -117,15 +116,15 @@ macro_rules! numid {
                     *v
                 })
             }
-            
+
             /// Get the value of the id.
             #[allow(dead_code)]
             #[inline]
             pub const fn value(self) -> $ty {
                 self.0
             }
-            
-            /// Return the value of the last id created (with `new()` or `default()`), 
+
+            /// Return the value of the last id created (with `new()` or `default()`),
             ///if no id has been created, return `initial_value()`.
             #[allow(dead_code)]
             #[inline]
@@ -134,14 +133,14 @@ macro_rules! numid {
                     *$name::__get_static_mut()
                 }
             }
-            
+
             /// Return INITIAL_VALUE.
             #[allow(dead_code)]
             #[inline]
             pub const fn initial_value() -> $ty {
                 $name::INITIAL_VALUE
             }
-            
+
             /// Replace the current value by the `value` parameter if it superior.
             /// This condition is necessary for not creating multiple ids with the same value.
             /// Return true if the current value has been modified.
@@ -156,7 +155,7 @@ macro_rules! numid {
                 }
                 cond
             }
-            
+
             /// Create a id with a precised value, don't increment the current value.
             /// The value must be inferior or equal as `INITIAL_VALUE` for not
             /// interfering with the id system.
@@ -170,7 +169,7 @@ macro_rules! numid {
                 $name(value)
             }
         }
-          
+
         /// Increment the current value and create a new id with value = `current_value()`.
         /// This is equivalent to `new()`.
         impl Default for $name {
@@ -179,8 +178,8 @@ macro_rules! numid {
                 $name::new()
             }
         }
-        
-        /// The method is directly applied to `value()`. 
+
+        /// The method is directly applied to `value()`.
         impl $crate::_core::fmt::Display for $name {
             #[inline]
             fn fmt(&self, f: &mut $crate::_core::fmt::Formatter<'_>) -> $crate::_core::fmt::Result {
@@ -193,7 +192,6 @@ macro_rules! numid {
 #[cfg(feature = "example")]
 pub mod example;
 
-
 // Always test the example.
 #[cfg(all(test, not(feature = "example")))]
 mod example;
@@ -204,52 +202,54 @@ mod tests {
     numid!(struct Id);
     numid!(struct IdWithInitVal -> 100);
     numid!(struct UnusedId(u32) -> 10);
-    
+
     #[test]
     fn tests_id_used() {
         assert_eq!(Id::initial_value(), 0);
         assert_eq!(Id::current_value(), Id::initial_value());
-        
+
         let id0 = Id::new();
-        
+
         assert_eq!(Id::current_value(), 1);
         assert_eq!(id0.value(), Id::current_value());
-        
+
         let id1 = Id::new();
         assert_eq!(Id::current_value(), 2);
         assert_eq!(id1.value(), Id::current_value());
         assert_ne!(id0, id1);
         assert!(id1 > id0);
-        
+
         let id2 = Id::default();
         assert_eq!(Id::current_value(), 3);
         assert_eq!(id2.value(), Id::current_value());
         assert!(id2 > id1);
-        
+
         assert!(Id::replace_current_value(10));
         assert_eq!(Id::current_value(), 10);
         assert_eq!(Id::replace_current_value(1), false);
         assert_eq!(Id::current_value(), 10);
         let id3 = Id::new();
         assert_eq!(id3.value(), 11);
-
     }
-    
+
     #[test]
     fn tests_id_with_init_val_used() {
         assert_eq!(IdWithInitVal::initial_value(), 100);
-        assert_eq!(IdWithInitVal::current_value(), IdWithInitVal::initial_value() );
-        
+        assert_eq!(
+            IdWithInitVal::current_value(),
+            IdWithInitVal::initial_value()
+        );
+
         let id0 = IdWithInitVal::new();
-        
+
         assert_eq!(IdWithInitVal::current_value(), 101);
         assert_eq!(id0.value(), IdWithInitVal::current_value());
-        
+
         let id1 = IdWithInitVal::new();
         assert_eq!(IdWithInitVal::current_value(), 102);
         assert_eq!(id1.value(), IdWithInitVal::current_value());
         assert!(id1 > id0);
-        
+
         assert!(IdWithInitVal::replace_current_value(150));
         assert_eq!(IdWithInitVal::current_value(), 150);
         assert_eq!(IdWithInitVal::replace_current_value(1), false);
@@ -257,36 +257,36 @@ mod tests {
         let id2 = IdWithInitVal::new();
         assert_eq!(id2.value(), 151);
     }
-    
+
     #[test]
     fn tests_create_lower() {
         let id = Id::create_lower(0);
         assert_eq!(id.value(), 0);
-        
+
         let _ = IdWithInitVal::create_lower(0);
         let _ = IdWithInitVal::create_lower(50);
         let _ = IdWithInitVal::create_lower(100);
-        
+
         let _ = UnusedId::create_lower(5);
     }
-    
+
     #[test]
     #[should_panic]
     fn tests_create_lower_fail() {
         let _ = IdWithInitVal::create_lower(150);
     }
-    
+
     // rustc v1.26+
     #[test]
     fn tests_u128() {
         numid!(struct Id128(u128) -> 1u128 << 100);
-        
+
         let id = Id128::new();
         assert_eq!(id.value(), (1u128 << 100) + 1);
-        
+
         assert!(Id128::replace_current_value(1u128 << 110));
         assert_eq!(Id128::replace_current_value(1u128 << 108), false);
-        
+
         let _ = Id128::create_lower(1u128 << 80);
     }
 }
