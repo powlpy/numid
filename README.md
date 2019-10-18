@@ -27,16 +27,35 @@ fn main() {
 
 ## Usage
 
-Add this to your `Cargo.toml`:
+Add this to your `Cargo.toml` :
 
 ```toml
 [dependencies]
-numid = "0.2.1"
+numid = "0.2"
 ```
 
-and this to your crate root:
+You can now create all the ids you want in your programs :
 
 ```rust
-#[macro_use]
-extern crate numid;
+use numid::numid;
+
+numid!(struct Id); // basic id
+numid!(pub struct _Id2); // public
+numid!(pub(crate) struct _Id3); // specifif public
+numid!(#[doc(hidden)] struct _Id4); // with attribut
+numid!(struct _Id5 -> 100); // init const specified
+numid!(struct _Id6(u128)); // type specified
+numid!(#[doc(hidden)] pub struct _Id7(u32) -> 10); // all the thing you can want
+
+fn main() { 
+    let id1 = Id::new();
+    let id2 = Id::default();
+    println!("id1 : {:?}", id1); // id1 : Id(1)
+    println!("id2 : {}", id2); // id2 : 2
+    const _CONST : u64 = Id::initial_value();
+    assert_eq!(Id::current_value(), 2);
+    assert!(Id::replace_current_value(50));
+    let _id0 = Id::create_lower(0);
+}
 ```
+Consult the [documentation](https://docs.rs/numid) for more informations.
