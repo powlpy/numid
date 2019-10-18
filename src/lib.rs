@@ -90,6 +90,8 @@ macro_rules! numid {
     
         /// A numerical id generated with the `numid!` macro.
         $(#[$attr])*
+        #[warn(non_camel_case_types)]
+        #[warn(dead_code)] // useless : allow(dead_code) for the fns remove the warning
         #[derive(Eq, PartialEq, Ord, PartialOrd, Clone, Copy, Hash, Debug)]
         $vis struct $name($ty);
                 
@@ -168,20 +170,21 @@ macro_rules! numid {
                 $name(value)
             }
         }
-                
+          
+        /// Increment the current value and create a new id with value = `current_value()`.
+        /// This is equivalent to `new()`.
         impl Default for $name {
-            /// Increment the current value and create a new id with value = `current_value()`.
-            /// This is equivalent to `new()`.
             #[inline]
             fn default() -> $name {
                 $name::new()
             }
         }
         
-        /// This method is directly applied to `value()`. 
+        /// The method is directly applied to `value()`. 
         impl $crate::_core::fmt::Display for $name {
+            #[inline]
             fn fmt(&self, f: &mut $crate::_core::fmt::Formatter<'_>) -> $crate::_core::fmt::Result {
-                write!(f, "{}", self.0)
+                self.0.fmt(f)
             }
         }
     };
