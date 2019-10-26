@@ -115,10 +115,10 @@ macro_rules! numid {
     ($(#[$attr:meta])* $vis:vis struct $name:ident($ty:ty) -> $init_val:expr) => {
 
         /// A numerical id generated with the `numid!` macro.
-        $(#[$attr])*
         #[warn(non_camel_case_types)]
         //#[warn(dead_code)] // useless : allow(dead_code) for the fns remove the warning
         #[derive(Eq, PartialEq, Ord, PartialOrd, Clone, Copy, Hash, Debug)]
+        $(#[$attr])*
         $vis struct $name($ty);
 
         impl $name {

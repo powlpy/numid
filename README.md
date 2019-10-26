@@ -50,7 +50,7 @@ numid!(struct Id5 -> 100); // init const specified
 numid!(struct Id6(u128)); // type specified
 numid!(#[doc(hidden)] pub struct Id7(u32) -> 10); // all the thing you can want
 ```
-Consult the [documentation](https://docs.rs/numid) for more informations.
+Consult the [documentation](https://docs.rs/numid) for more information.
 
 ## TODO list
 
