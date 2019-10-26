@@ -20,7 +20,8 @@ exclude = [
 travis-ci = { repository = "powlpy/numid" }
 
 [features]
-default = []
+default = ["display"]
+display = []
 example = []
 
 [package.metadata.docs.rs]
