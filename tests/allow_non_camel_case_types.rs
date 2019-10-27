@@ -1,4 +1,3 @@
-
 #![deny(warnings)]
 
 use numid::numid;

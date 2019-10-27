@@ -11,4 +11,4 @@ fn tests_u128() {
     assert_eq!(Id128::replace_current_value(1u128 << 108), false);
 
     let _ = Id128::create_lower(1u128 << 80);
-} 
+}

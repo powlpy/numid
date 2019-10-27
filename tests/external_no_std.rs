@@ -1,4 +1,3 @@
-
 #![no_std]
 use numid::numid;
 
@@ -8,4 +7,4 @@ numid!(struct Test);
 fn external_no_std() {
     let id = Test::new();
     assert!(id.value() != 0);
-} 
+}

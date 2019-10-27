@@ -8,4 +8,4 @@ use core::fmt::Display;
 numid!(struct Test);
 
 #[test]
-fn conflicting_trait_impl() {} 
+fn conflicting_trait_impl() {}
