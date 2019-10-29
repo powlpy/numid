@@ -54,6 +54,5 @@ Consult the [documentation](https://docs.rs/numid) for more information.
 
 ## TODO list
 
- - Add format trait
  - `create_lower` for constant
  - `serde` feature

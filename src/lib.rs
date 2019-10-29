@@ -44,8 +44,9 @@ The `Copy`, `Clone`, `PartialEq`, `Eq`, `PartialOrd`, `Ord`, `Hash` and `Debug`
 traits automatically derived for the `struct` using the `derive` attribute.
 Additional traits can be derived by providing an explicit `derive` attribute.
 
-The `Display` and `Default` traits are implemented for the `struct`. When
-calling `default()`, the struct is initialized with a new value instead of `0`.
+The `Display`, `Binary`, `Octal`, `LowerHex`, `UpperHex` and `Default` traits are implemented for 
+the `struct`. When calling `default()`, the struct is initialized with a new value instead of `0`.
+Your own version of `Display` can be implemented by disabling the `display` feature.
 
 # Methods
 
@@ -221,8 +222,24 @@ macro_rules! numid {
             }
         }
 
+        $crate::__fmt_impl_numid!($name : Binary, Octal, LowerHex, UpperHex);
         $crate::__display_numid!($name);
     };
+}
+
+#[macro_export]
+#[doc(hidden)]
+macro_rules! __fmt_impl_numid {
+    ($name:ident : $($trait:ident),+) => {
+        $(
+            impl $crate::_core::fmt::$trait for $name {
+                #[inline]
+                fn fmt(&self, f: &mut $crate::_core::fmt::Formatter<'_>) -> $crate::_core::fmt::Result {
+                    $crate::_core::fmt::$trait::fmt(&self.0, f)
+                }
+            }
+        )+
+    }
 }
 
 #[cfg(feature = "display")]
@@ -230,13 +247,7 @@ macro_rules! numid {
 #[doc(hidden)]
 macro_rules! __display_numid {
     ($name:ident) => {
-        /// The method is directly applied to `value()`.
-        impl $crate::_core::fmt::Display for $name {
-            #[inline]
-            fn fmt(&self, f: &mut $crate::_core::fmt::Formatter<'_>) -> $crate::_core::fmt::Result {
-                $crate::_core::fmt::Display::fmt(&self.0, f)
-            }
-        }
+        $crate::__fmt_impl_numid!($name : Display);
     };
 }
 
@@ -356,6 +367,42 @@ mod tests {
         let idh = IdDebug::create_maybe(0x1b3d).unwrap();
         assert_eq!(std::format!("{:x?}", idh), "IdDebug(1b3d)");
         assert_eq!(std::format!("{:X?}", idh), "IdDebug(1B3D)");
+    }
+    
+    #[test]
+    fn test_binary() {
+        numid!(struct IdBinary -> 0b1001);
+
+        let id = IdBinary::new();
+        assert_eq!(std::format!("{:b}", id), "1010");
+        assert_eq!(std::format!("{:#b}", id), "0b1010");
+    }
+    
+    #[test]
+    fn test_octal() {
+        numid!(struct IdOctal -> 0o7705);
+
+        let id = IdOctal::new();
+        assert_eq!(std::format!("{:o}", id), "7706");
+        assert_eq!(std::format!("{:#o}", id), "0o7706");
+    }
+    
+    #[test]
+    fn test_lowerhex() {
+        numid!(struct IdLowerHex -> 0xEFFE);
+
+        let id = IdLowerHex::new();
+        assert_eq!(std::format!("{:x}", id), "efff");
+        assert_eq!(std::format!("{:#x}", id), "0xefff");
+    }
+    
+    #[test]
+    fn test_upperhex() {
+        numid!(struct IdUpperHex -> 0xEFFE);
+
+        let id = IdUpperHex::new();
+        assert_eq!(std::format!("{:X}", id), "EFFF");
+        assert_eq!(std::format!("{:#X}", id), "0xEFFF");
     }
 
     #[cfg(feature = "display")]
