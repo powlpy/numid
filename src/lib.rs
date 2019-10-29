@@ -44,7 +44,7 @@ The `Copy`, `Clone`, `PartialEq`, `Eq`, `PartialOrd`, `Ord`, `Hash` and `Debug`
 traits automatically derived for the `struct` using the `derive` attribute.
 Additional traits can be derived by providing an explicit `derive` attribute.
 
-The `Display`, `Binary`, `Octal`, `LowerHex`, `UpperHex` and `Default` traits are implemented for 
+The `Display`, `Binary`, `Octal`, `LowerHex`, `UpperHex` and `Default` traits are implemented for
 the `struct`. When calling `default()`, the struct is initialized with a new value instead of `0`.
 Your own version of `Display` can be implemented by disabling the `display` feature.
 
@@ -87,7 +87,6 @@ extern crate std;
 
 // Re-export libcore using an alias so that the macros can work without
 // requiring `extern crate core` downstream.
-#[cfg(feature = "display")]
 #[doc(hidden)]
 pub extern crate core as _core;
 
@@ -247,7 +246,7 @@ macro_rules! __fmt_impl_numid {
 #[doc(hidden)]
 macro_rules! __display_numid {
     ($name:ident) => {
-        $crate::__fmt_impl_numid!($name : Display);
+        $crate::__fmt_impl_numid!($name: Display);
     };
 }
 
@@ -368,7 +367,7 @@ mod tests {
         assert_eq!(std::format!("{:x?}", idh), "IdDebug(1b3d)");
         assert_eq!(std::format!("{:X?}", idh), "IdDebug(1B3D)");
     }
-    
+
     #[test]
     fn test_binary() {
         numid!(struct IdBinary -> 0b1001);
@@ -377,7 +376,7 @@ mod tests {
         assert_eq!(std::format!("{:b}", id), "1010");
         assert_eq!(std::format!("{:#b}", id), "0b1010");
     }
-    
+
     #[test]
     fn test_octal() {
         numid!(struct IdOctal -> 0o7705);
@@ -386,7 +385,7 @@ mod tests {
         assert_eq!(std::format!("{:o}", id), "7706");
         assert_eq!(std::format!("{:#o}", id), "0o7706");
     }
-    
+
     #[test]
     fn test_lowerhex() {
         numid!(struct IdLowerHex -> 0xEFFE);
@@ -395,7 +394,7 @@ mod tests {
         assert_eq!(std::format!("{:x}", id), "efff");
         assert_eq!(std::format!("{:#x}", id), "0xefff");
     }
-    
+
     #[test]
     fn test_upperhex() {
         numid!(struct IdUpperHex -> 0xEFFE);
