@@ -363,46 +363,31 @@ mod tests {
         let id = IdDebug::new();
         assert_eq!(std::format!("{:?}", id), "IdDebug(1)");
 
-        let idh = IdDebug::create_maybe(0x1b3d).unwrap();
-        assert_eq!(std::format!("{:x?}", idh), "IdDebug(1b3d)");
-        assert_eq!(std::format!("{:X?}", idh), "IdDebug(1B3D)");
+        numid!(struct IdDebugHexa -> 0x1b3d - 1);
+        
+        let idh = IdDebugHexa::new();
+        assert_eq!(std::format!("{:x?}", idh), "IdDebugHexa(1b3d)");
+        assert_eq!(std::format!("{:X?}", idh), "IdDebugHexa(1B3D)");
+    }
+    
+    macro_rules! test_fmt {
+        // $literal introduced in rustc 1.32
+        ($func:ident, $fmt:expr, $value:expr, $fmt_repr:expr, $repr:expr) => {
+            #[test]
+            fn $func() {
+                numid!(struct Test -> $value - 1);
+
+                let id = Test::new();
+                assert_eq!(std::format!(std::concat!("{:", $fmt, "}"), id), $repr);
+                assert_eq!(std::format!(std::concat!("{:#", $fmt, "}"), id), std::concat!($fmt_repr, $repr));
+            }
+        };
     }
 
-    #[test]
-    fn test_binary() {
-        numid!(struct IdBinary -> 0b1001);
-
-        let id = IdBinary::new();
-        assert_eq!(std::format!("{:b}", id), "1010");
-        assert_eq!(std::format!("{:#b}", id), "0b1010");
-    }
-
-    #[test]
-    fn test_octal() {
-        numid!(struct IdOctal -> 0o7705);
-
-        let id = IdOctal::new();
-        assert_eq!(std::format!("{:o}", id), "7706");
-        assert_eq!(std::format!("{:#o}", id), "0o7706");
-    }
-
-    #[test]
-    fn test_lowerhex() {
-        numid!(struct IdLowerHex -> 0xEFFE);
-
-        let id = IdLowerHex::new();
-        assert_eq!(std::format!("{:x}", id), "efff");
-        assert_eq!(std::format!("{:#x}", id), "0xefff");
-    }
-
-    #[test]
-    fn test_upperhex() {
-        numid!(struct IdUpperHex -> 0xEFFE);
-
-        let id = IdUpperHex::new();
-        assert_eq!(std::format!("{:X}", id), "EFFF");
-        assert_eq!(std::format!("{:#X}", id), "0xEFFF");
-    }
+    test_fmt!(test_binary, "b", 0b1010, "0b", "1010");
+    test_fmt!(test_octal, "o", 0o7706, "0o", "7706");
+    test_fmt!(test_lowerhex, "x", 0xEFFF, "0x", "efff");
+    test_fmt!(test_upperhex, "X", 0xEFFF, "0x", "EFFF");
 
     #[cfg(feature = "display")]
     #[test]
