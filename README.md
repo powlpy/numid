@@ -54,5 +54,4 @@ Consult the [documentation](https://docs.rs/numid) for more information.
 
 ## TODO list
 
- - `create_lower` for constant
  - `serde` feature
