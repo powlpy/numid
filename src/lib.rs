@@ -121,6 +121,10 @@ macro_rules! numid {
         $vis struct $name($ty);
 
         impl $name {
+            /// Type of the value.
+            #[allow(dead_code)]
+            pub type TypeValue = $ty;
+        
             /// Constant defined when calling the `numid!` macro (0 if not defined).
             /// The firt id created (with `new()` or `default()`) will have value = `INITIAL_VALUE + 1`.
             pub const INITIAL_VALUE: $ty = $init_val;
@@ -220,8 +224,8 @@ macro_rules! numid {
             #[inline]
             pub const fn const_create_lower(value: $ty) -> $name {
                 #![forbid(const_err)]
-                const ASSERT: [(); $name::INITIAL_VALUE as usize + 1] = [(); $name::INITIAL_VALUE as usize + 1];
-                let _ = ASSERT[value as usize];
+                const ASSERT: [(); 1] = [()];
+                let _ = ASSERT[(value > $name::initial_value()) as usize];
                 $name(value)
             }
         }
