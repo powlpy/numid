@@ -54,4 +54,5 @@ Consult the [documentation](https://docs.rs/numid) for more information.
 
 ## TODO list
 
+ - more controle for Clone
  - `serde` feature
