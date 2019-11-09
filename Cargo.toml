@@ -1,6 +1,6 @@
 [package]
 name = "numid"
-version = "0.2.7"
+version = "0.2.8"
 authors = ["Nicolas Poelen"]
 edition = "2018"
 
@@ -18,6 +18,9 @@ exclude = [
 
 [badges]
 travis-ci = { repository = "powlpy/numid" }
+
+[dependencies]
+const_fn_assert = "0.1"
 
 [features]
 default = ["display"]

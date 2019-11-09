@@ -7,6 +7,17 @@
 /*!
 This crate provide the `numid!` macro for creating numerical id.
 
+Each new instance of your id is guaranteed to have a higher value than 
+the previous one created. However, the value range less than or equal 
+to `INITIAL_VALUE` is free to use, and multiple instances with the same value 
+can be created.
+
+Use `new`, `default` or `create_maybe` for creating unique id.
+
+Use `create_lower` or `const_create_lower` for creating free id.
+
+Id created with `reproduce` are unique or free depending on the id used.
+
 # Syntax
 
 ```ignore
@@ -117,7 +128,7 @@ macro_rules! numid {
 
         /// A numerical id generated with the `numid!` macro.
         #[warn(non_camel_case_types)]
-        //#[warn(dead_code)] // rust-lang : issue 66030
+        #[warn(dead_code)] // rust-lang : issue 66030
         #[derive(Eq, PartialEq, Ord, PartialOrd, Clone, Copy, Hash, Debug)]
         $(#[$attr])*
         $vis struct $name($ty);
