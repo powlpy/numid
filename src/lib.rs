@@ -50,7 +50,7 @@ Your own version of `Display` can be implemented by disabling the `display` feat
 
 # Methods
 
-The following methods are defined for the generated `struct` (only `value` need a instance) :
+The following methods are defined for the generated `struct` (only `value` and `reproduce` need a instance) :
 
 - `new` : create a new id
 - `value` : get the id value
@@ -84,8 +84,9 @@ Features used in this crate by rust version :
 Current minimum rust version of the crate : 1.31
 */
 
-// Re-export libcore using an alias so that the macros can work without
-// requiring `extern crate core` downstream.
+#[doc(hidden)]
+pub extern crate const_fn_assert as _const_fn_assert;
+
 #[doc(hidden)]
 pub extern crate core as _core;
 
@@ -220,9 +221,7 @@ macro_rules! numid {
             #[allow(dead_code)]
             #[inline]
             pub const fn const_create_lower(value: $ty) -> $name {
-                #![forbid(const_err)]
-                const ASSERT: [(); 1] = [()];
-                let _ = ASSERT[(value > $name::initial_value()) as usize];
+                $crate::_const_fn_assert::cfn_assert!(value <= $name::initial_value());
                 $name(value)
             }
 
