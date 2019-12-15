@@ -1,6 +1,6 @@
 [package]
 name = "numid"
-version = "0.2.8"
+version = "0.2.9"
 authors = ["Nicolas Poelen"]
 edition = "2018"
 

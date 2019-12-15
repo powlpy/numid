@@ -59,6 +59,12 @@ The `Display`, `Binary`, `Octal`, `LowerHex`, `UpperHex` and `Default` traits ar
 the `struct`. When calling `default()`, the struct is initialized with a new value instead of `0`.
 Your own version of `Display` can be implemented by disabling the `display` default feature.
 
+The behavior of the `Clone` trait can be modified with built-in attribut :
+- `@CloneIsClone` : default behavior, can be ignored
+- `@CloneIsNew` : `clone()` call `new()`
+- `@CloneIsReproduce` : `clone()` call `reproduce()`
+This built-in attribut must be placed between the attributs and the visibility argument.
+
 # Methods
 
 The following methods are defined for the generated `struct` (only `value` and `reproduce` need a instance) :
@@ -102,7 +108,8 @@ pub extern crate core as _core;
 /// numid!(#[doc(hidden)] struct Id4); // with attribute
 /// numid!(struct Id5 -> 100); // init const specified
 /// numid!(struct Id6(u128)); // type specified
-/// numid!(#[doc(hidden)] pub struct Id7(u32) -> 10); // all the thing you can want
+/// numid!(@CloneIsReproduce struct Id7); // with in-macro special attribute
+/// numid!(#[doc(hidden)] @CloneIsNew pub struct Id8(u32) -> 10); // all the thing you can want
 /// ```
 #[macro_export]
 macro_rules! numid {

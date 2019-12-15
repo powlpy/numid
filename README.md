@@ -48,11 +48,11 @@ numid!(pub(crate) struct Id3); // restricted public
 numid!(#[doc(hidden)] struct Id4); // with attribut
 numid!(struct Id5 -> 100); // init const specified
 numid!(struct Id6(u128)); // type specified
-numid!(#[doc(hidden)] pub struct Id7(u32) -> 10); // all the thing you can want
+numid!(@CloneIsReproduce struct Id7); // with in-macro special attribute
+numid!(#[doc(hidden)] @CloneIsNew pub struct Id8(u32) -> 10); // all the thing you can want
 ```
 Consult the [documentation](https://docs.rs/numid) for more information.
 
 ## TODO list
 
- - more controle for Clone
  - `serde` feature
