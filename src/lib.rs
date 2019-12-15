@@ -288,7 +288,7 @@ macro_rules! __macro_attr_numid {
 
         impl Copy for $name { }
 
-        __macro_attr_numid!($name $($stack)*);
+        $crate::__macro_attr_numid!($name $($stack)*);
     };
     ($name:ident CloneIsNew $($stack:ident)*) => {
         impl Clone for $name {
@@ -300,7 +300,7 @@ macro_rules! __macro_attr_numid {
 
         impl Copy for $name { }
 
-        __macro_attr_numid!($name $($stack)*);
+        $crate::__macro_attr_numid!($name $($stack)*);
     };
     ($name:ident CloneIsReproduce $($stack:ident)*) => {
         impl Clone for $name {
@@ -312,7 +312,7 @@ macro_rules! __macro_attr_numid {
 
         impl Copy for $name { }
 
-        __macro_attr_numid!($name $($stack)*);
+        $crate::__macro_attr_numid!($name $($stack)*);
     };
 }
 
