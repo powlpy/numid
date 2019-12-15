@@ -1,6 +1,6 @@
 // Copyright 2019 numid Developers
 //
-// Licensed under the MIT license <LICENSE-MIT or
+// Licensed under the MIT license <LICENSE or
 // http://opensource.org/licenses/MIT>. This file may not be
 // copied, modified, or distributed except according to those terms.
 
@@ -57,7 +57,7 @@ Additional traits can be derived by providing an explicit `derive` attribute.
 
 The `Display`, `Binary`, `Octal`, `LowerHex`, `UpperHex` and `Default` traits are implemented for
 the `struct`. When calling `default()`, the struct is initialized with a new value instead of `0`.
-Your own version of `Display` can be implemented by disabling the `display` feature.
+Your own version of `Display` can be implemented by disabling the `display` default feature.
 
 # Methods
 
@@ -86,15 +86,6 @@ add `default-features = false` in the `dependencies.numid` section of your `Carg
 #![doc(html_root_url = "https://docs.rs/numid")]
 #![warn(missing_docs)]
 
-/*
-Features used in this crate by rust version :
- - 1.31 : const fn
- - 1.30 : $vis
- - 1.20 : associated const
-
-Current minimum rust version of the crate : 1.31
-*/
-
 #[doc(hidden)]
 pub extern crate const_fn_assert as _const_fn_assert;
 
@@ -108,7 +99,7 @@ pub extern crate core as _core;
 /// numid!(struct Id); // basic id
 /// numid!(pub struct Id2); // public
 /// numid!(pub(crate) struct Id3); // restricted public
-/// numid!(#[doc(hidden)] struct Id4); // with attribut
+/// numid!(#[doc(hidden)] struct Id4); // with attribute
 /// numid!(struct Id5 -> 100); // init const specified
 /// numid!(struct Id6(u128)); // type specified
 /// numid!(#[doc(hidden)] pub struct Id7(u32) -> 10); // all the thing you can want
@@ -116,26 +107,38 @@ pub extern crate core as _core;
 #[macro_export]
 macro_rules! numid {
     ($(#[$attr:meta])* $vis:vis struct $name:ident) => {
-        numid!{$(#[$attr])* $vis struct $name(u64) -> 0}
+        numid!{$(#[$attr])* @CloneIsClone $vis struct $name(u64) -> 0 }
     };
     ($(#[$attr:meta])* $vis:vis struct $name:ident -> $init_val:expr) => {
-        numid!{$(#[$attr])* $vis struct $name(u64) -> $init_val}
+        numid!{$(#[$attr])* @CloneIsClone $vis struct $name(u64) -> $init_val }
     };
     ($(#[$attr:meta])* $vis:vis struct $name:ident($ty:ty)) => {
-        numid!{$(#[$attr])* $vis struct $name($ty) -> 0}
+        numid!{$(#[$attr])* @CloneIsClone $vis struct $name($ty) -> 0 }
     };
     ($(#[$attr:meta])* $vis:vis struct $name:ident($ty:ty) -> $init_val:expr) => {
+        numid!{$(#[$attr])* @CloneIsClone $vis struct $name($ty) -> $init_val }
+    };
+    ($(#[$attr:meta])* $(@$mattr:ident)+ $vis:vis struct $name:ident) => {
+        numid!{$(#[$attr])* $(@$mattr)+ $vis struct $name(u64) -> 0 }
+    };
+    ($(#[$attr:meta])* $(@$mattr:ident)+ $vis:vis struct $name:ident -> $init_val:expr) => {
+        numid!{$(#[$attr])* $(@$mattr)+ $vis struct $name(u64) -> $init_val }
+    };
+    ($(#[$attr:meta])* $(@$mattr:ident)+ $vis:vis struct $name:ident($ty:ty)) => {
+        numid!{$(#[$attr])* $(@$mattr)+ $vis struct $name($ty) -> 0 }
+    };
+    ($(#[$attr:meta])* $(@$mattr:ident)* $vis:vis struct $name:ident($ty:ty) -> $init_val:expr) => {
 
         /// A numerical id generated with the `numid!` macro.
         #[warn(non_camel_case_types)]
         #[warn(dead_code)] // rust-lang : issue 66030
-        #[derive(Eq, PartialEq, Ord, PartialOrd, Clone, Copy, Hash, Debug)]
-        $(#[$attr])*
+        #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+        $(#[$attr])* 
         $vis struct $name($ty);
 
         impl $name {
             /// Constant defined when calling the `numid!` macro (0 if not defined).
-            /// The firt id created (with `new()` or `default()`) will have value = `INITIAL_VALUE + 1`.
+            /// The first id created (with `new()` or `default()`) will have value = `INITIAL_VALUE + 1`.
             pub const INITIAL_VALUE: $ty = $init_val;
 
             #[doc(hidden)]
@@ -223,7 +226,7 @@ macro_rules! numid {
             }
 
             /// Const version of [`create_lower`](#method.create_lower),
-            /// can be used in a const environnement. In a non-const environnement, give a
+            /// can be used in a const environment. In a non-const environment, give a
             /// `index: out of bounds` panic message, `create_lower` giving a more descriptive
             /// message is therefore preferred.
             ///
@@ -258,8 +261,51 @@ macro_rules! numid {
             }
         }
 
+        $crate::__macro_attr_numid!($name $($mattr)*);
         $crate::__fmt_impl_numid!($name : Binary, Octal, LowerHex, UpperHex);
         $crate::__display_numid!($name);
+    };
+}
+
+#[macro_export]
+#[doc(hidden)]
+macro_rules! __macro_attr_numid {
+    ($name:ident) => {};
+    ($name:ident CloneIsClone $($stack:ident)*) => {
+        impl Clone for $name {
+            #[inline]
+            fn clone(&self) -> $name {
+                *self
+            }
+        }
+
+        impl Copy for $name { }
+
+        __macro_attr_numid!($name $($stack)*);
+    };
+    ($name:ident CloneIsNew $($stack:ident)*) => {
+        impl Clone for $name {
+            #[inline]
+            fn clone(&self) -> $name {
+                $name::new()
+            }
+        }
+
+        impl Copy for $name { }
+
+        __macro_attr_numid!($name $($stack)*);
+    };
+    ($name:ident CloneIsReproduce $($stack:ident)*) => {
+        impl Clone for $name {
+            #[inline]
+            fn clone(&self) -> $name {
+                self.reproduce()
+            }
+        }
+
+        impl Copy for $name { }
+
+        __macro_attr_numid!($name $($stack)*);
     };
 }
 
@@ -518,5 +564,32 @@ mod tests {
         }
 
         assert_eq!(module::value(), 7);
+    }
+
+    #[test]
+    fn test_clone_is_clone() {
+        numid!(@CloneIsClone struct Test);
+        let t = Test::new();
+        assert_eq!(t, t.clone());
+        let tt = Test::create_lower(0);
+        assert_eq!(tt, tt.clone());
+    }
+
+    #[test]
+    fn test_clone_is_new() {
+        numid!(@CloneIsNew struct Test);
+        let t = Test::new();
+        assert_ne!(t, t.clone());
+        let tt = Test::create_lower(0);
+        assert_ne!(tt, tt.clone());
+    }
+
+    #[test]
+    fn test_clone_is_reproduce() {
+        numid!(@CloneIsReproduce struct Test);
+        let t = Test::new();
+        assert_ne!(t, t.clone());
+        let tt = Test::create_lower(0);
+        assert_eq!(tt, tt.clone());
     }
 }
